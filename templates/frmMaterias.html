@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Materias</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .main-content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Gestión de Materias</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="frmInstitutos.html"><i class="fas fa-school"></i> Institutos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"><i class="fas fa-chalkboard-teacher"></i> Profesores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmMaterias.html"><i class="fas fa-book"></i> Materias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAlumnos.html"><i class="fas fa-user-graduate"></i> Alumnos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmClases.html"><i class="fas fa-calendar-alt"></i> Clases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAsistencias.html"><i class="fas fa-check-circle"></i> Asistencias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmRequisitos.html"><i class="fas fa-tasks"></i> Requisitos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container main-content">
+        <h1 class="text-center">Gestión de Materias</h1>
+        
+        <!-- Formulario para agregar o editar materia -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-book"></i> Agregar / Editar Materia
+            </div>
+            <div class="card-body">
+                <form id="formMateria">
+                    <input type="hidden" id="idMateria" name="idMateria">
+                    <div class="form-group">
+                        <label for="nombreMateria">Nombre de la Materia:</label>
+                        <input type="text" class="form-control" id="nombreMateria" name="nombreMateria" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="descripcion">Descripción:</label>
+                        <textarea class="form-control" id="descripcion" name="descripcion" rows="3"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Materias -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i> Lista de Materias
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaMaterias">
+                        <!-- Filas de materias generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script para manejar el formulario y la tabla -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formMateria = document.getElementById('formMateria');
+            const tablaMaterias = document.getElementById('tablaMaterias');
+            let idMateria = 1;
+
+            // Ejemplo de datos de materias
+            const materias = [
+                { id: 1, nombre: 'Matemáticas', descripcion: 'Curso de matemáticas básicas.' },
+                { id: 2, nombre: 'Física', descripcion: 'Curso de física elemental.' },
+                { id: 3, nombre: 'Programación', descripcion: 'Curso de introducción a la programación.' },
+            ];
+
+            // Cargar lista inicial de materias
+            cargarMaterias();
+
+            // Función para cargar las materias en la tabla
+            function cargarMaterias() {
+                tablaMaterias.innerHTML = '';
+                materias.forEach(materia => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${materia.id}</td>
+                        <td>${materia.nombre}</td>
+                        <td>${materia.descripcion}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editarMateria(${materia.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminarMateria(${materia.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tablaMaterias.appendChild(row);
+                });
+            }
+
+            // Función para agregar o editar una materia
+            formMateria.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const nombre = formMateria.nombreMateria.value;
+                const descripcion = formMateria.descripcion.value;
+
+                // Simular creación o edición de materia (añadir lógica real según backend)
+                if (formMateria.idMateria.value) {
+                    // Editar materia existente
+                    const id = parseInt(formMateria.idMateria.value);
+                    const materiaIndex = materias.findIndex(materia => materia.id === id);
+                    materias[materiaIndex].nombre = nombre;
+                    materias[materiaIndex].descripcion = descripcion;
+                } else {
+                    // Agregar nueva materia
+                    const nuevaMateria = {
+                        id: ++idMateria,
+                        nombre: nombre,
+                        descripcion: descripcion,
+                    };
+                    materias.push(nuevaMateria);
+                }
+
+                // Recargar lista de materias
+                cargarMaterias();
+
+                // Limpiar formulario
+                formMateria.reset();
+                formMateria.idMateria.value = '';
+            });
+
+            // Función para editar una materia
+            window.editarMateria = function(id) {
+                const materia = materias.find(materia => materia.id === id);
+                formMateria.idMateria.value = materia.id;
+                formMateria.nombreMateria.value = materia.nombre;
+                formMateria.descripcion.value = materia.descripcion;
+            };
+
+            // Función para eliminar una materia
+            window.eliminarMateria = function(id) {
+                materias = materias.filter(materia => materia.id !== id);
+                cargarMaterias();
+            };
+        });
+    </script>
+</body>
+</html>

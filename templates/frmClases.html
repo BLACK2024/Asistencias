@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Clases</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .main-content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Gestión de Clases</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="frmInstitutos.html"><i class="fas fa-school"></i> Institutos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"><i class="fas fa-chalkboard-teacher"></i> Profesores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmMaterias.html"><i class="fas fa-book"></i> Materias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAlumnos.html"><i class="fas fa-user-graduate"></i> Alumnos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmClases.html"><i class="fas fa-calendar-alt"></i> Clases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAsistencias.html"><i class="fas fa-check-circle"></i> Asistencias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmRequisitos.html"><i class="fas fa-tasks"></i> Requisitos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container main-content">
+        <h1 class="text-center">Gestión de Clases</h1>
+        
+        <!-- Formulario para agregar o editar clases -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-calendar-alt"></i> Agregar / Editar Clase
+            </div>
+            <div class="card-body">
+                <form id="formClase">
+                    <input type="hidden" id="idClase" name="idClase">
+                    <div class="form-group">
+                        <label for="materia">Materia:</label>
+                        <select class="form-control" id="materia" name="materia" required>
+                            <!-- Opciones de materias cargadas dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="profesor">Profesor:</label>
+                        <select class="form-control" id="profesor" name="profesor" required>
+                            <!-- Opciones de profesores cargadas dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="carrera">Carrera:</label>
+                        <select class="form-control" id="carrera" name="carrera" required>
+                            <!-- Opciones de carreras cargadas dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="instituto">Instituto:</label>
+                        <select class="form-control" id="instituto" name="instituto" required>
+                            <!-- Opciones de institutos cargadas dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="anio">Año:</label>
+                        <select class="form-control" id="anio" name="anio" required>
+                            <option value="1">1°</option>
+                            <option value="2">2°</option>
+                            <option value="3">3°</option>
+                            <option value="4">4°</option>
+                            <option value="5">5°</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Clases -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i> Lista de Clases
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Materia</th>
+                            <th>Profesor</th>
+                            <th>Carrera</th>
+                            <th>Instituto</th>
+                            <th>Año</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaClases">
+                        <!-- Filas de clases generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script para manejar el formulario y la tabla -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formClase = document.getElementById('formClase');
+            const tablaClases = document.getElementById('tablaClases');
+            let idClase = 1;
+
+            // Ejemplo de datos de clases
+            const clases = [
+                { id: 1, materia: 'Matemáticas', profesor: 'Juan Pérez', carrera: 'Ingeniería', instituto: 'Instituto 1', anio: '1°' },
+                { id: 2, materia: 'Física', profesor: 'María Gómez', carrera: 'Ingeniería', instituto: 'Instituto 2', anio: '2°' },
+            ];
+
+            // Cargar lista inicial de clases
+            cargarClases();
+
+            // Función para cargar las clases en la tabla
+            function cargarClases() {
+                tablaClases.innerHTML = '';
+                clases.forEach(clase => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${clase.id}</td>
+                        <td>${clase.materia}</td>
+                        <td>${clase.profesor}</td>
+                        <td>${clase.carrera}</td>
+                        <td>${clase.instituto}</td>
+                        <td>${clase.anio}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editarClase(${clase.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminarClase(${clase.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tablaClases.appendChild(row);
+                });
+            }
+
+            // Función para agregar o editar una clase
+            formClase.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const materia = formClase.materia.value;
+                const profesor = formClase.profesor.value;
+                const carrera = formClase.carrera.value;
+                const instituto = formClase.instituto.value;
+                const anio = formClase.anio.value;
+
+                // Simular creación o edición de clase (añadir lógica real según backend)
+                if (formClase.idClase.value) {
+                    // Editar clase existente
+                    const id = parseInt(formClase.idClase.value);
+                    const claseIndex = clases.findIndex(clase => clase.id === id);
+                    clases[claseIndex].materia = materia;
+                    clases[claseIndex].profesor = profesor;
+                    clases[claseIndex].carrera = carrera;
+                    clases[claseIndex].instituto = instituto;
+                    clases[claseIndex].anio = anio;
+                } else {
+                    // Agregar nueva clase
+                    const nuevaClase = {
+                        id: idClase++,
+                        materia: materia,
+                        profesor: profesor,
+                        carrera: carrera,
+                        instituto: instituto,
+                        anio: anio
+                    };
+                    clases.push(nuevaClase);
+                }
+
+                cargarClases();
+                formClase.reset();
+                formClase.idClase.value = '';
+            });
+
+            // Función para editar una clase
+            window.editarClase = function(id) {
+                const clase = clases.find(cl => cl.id === id);
+                formClase.idClase.value = clase.id;
+                formClase.materia.value = clase.materia;
+                formClase.profesor.value = clase.profesor;
+                formClase.carrera.value = clase.carrera;
+                formClase.instituto.value = clase.instituto;
+                formClase.anio.value = clase.anio;
+            }
+
+            // Función para eliminar una clase
+            window.eliminarClase = function(id) {
+                const claseIndex = clases.findIndex(clase => clase.id === id);
+                clases.splice(claseIndex, 1);
+                cargarClases();
+            }
+        });
+    </script>
+</body>
+</html>

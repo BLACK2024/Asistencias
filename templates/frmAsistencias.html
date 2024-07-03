@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Asistencias por Clase</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .main-content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Gestión de Asistencias</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="frmInstitutos.html"><i class="fas fa-school"></i> Institutos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"><i class="fas fa-chalkboard-teacher"></i> Profesores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmMaterias.html"><i class="fas fa-book"></i> Materias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAlumnos.html"><i class="fas fa-user-graduate"></i> Alumnos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmClases.html"><i class="fas fa-calendar-alt"></i> Clases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAsistencias.html"><i class="fas fa-check-circle"></i> Asistencias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmRequisitos.html"><i class="fas fa-tasks"></i> Requisitos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container main-content">
+        <h1 class="text-center">Gestión de Asistencias por Clase</h1>
+        
+        <!-- Filtros para seleccionar instituto, materia y año de carrera -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-filter"></i> Filtrar Alumnos por Instituto, Materia y Año de Carrera
+            </div>
+            <div class="card-body">
+                <form id="formFiltros">
+                    <div class="form-row">
+                        <div class="form-group col-md-4">
+                            <label for="selectInstituto">Instituto:</label>
+                            <select id="selectInstituto" class="form-control" required>
+                                <option value="">Seleccionar Instituto...</option>
+                                <!-- Opciones de institutos generadas dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="selectMateria">Materia:</label>
+                            <select id="selectMateria" class="form-control" required>
+                                <option value="">Seleccionar Materia...</option>
+                                <!-- Opciones de materias generadas dinámicamente -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label for="selectAnioCarrera">Año de Carrera:</label>
+                            <select id="selectAnioCarrera" class="form-control" required>
+                                <option value="">Seleccionar Año de Carrera...</option>
+                                <!-- Opciones de años de carrera generadas dinámicamente -->
+                            </select>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Filtrar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Alumnos -->
+        <div class="card mb-4" id="listaAlumnosCard" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-list"></i> Lista de Alumnos
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nombre</th>
+                            <th>Asistencia</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaAlumnos">
+                        <!-- Filas de alumnos generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Formulario para registrar asistencias -->
+        <div class="card mb-4" id="formAsistenciaCard" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-check-circle"></i> Registrar Asistencia
+            </div>
+            <div class="card-body">
+                <form id="formAsistencia">
+                    <input type="hidden" id="idAlumnoAsistencia" name="idAlumnoAsistencia">
+                    <div class="form-group">
+                        <label for="clase">Clase:</label>
+                        <input type="text" class="form-control" id="clase" name="clase" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="fecha">Fecha:</label>
+                        <input type="date" class="form-control" id="fecha" name="fecha" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="asistencia">¿Asistió?</label><br>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="asistencia" id="asistenciaSi" value="si" required>
+                            <label class="form-check-label" for="asistenciaSi">Sí</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" name="asistencia" id="asistenciaNo" value="no" required>
+                            <label class="form-check-label" for="asistenciaNo">No</label>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Porcentaje de Asistencia -->
+        <div class="card mb-4" id="porcentajeAsistenciaCard" style="display: none;">
+            <div class="card-header">
+                <i class="fas fa-chart-bar"></i> Porcentaje de Asistencia
+            </div>
+            <div class="card-body">
+                <h5 id="porcentajeAsistencia">Porcentaje de Asistencia: 0%</h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script para manejar el formulario y la tabla -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formFiltros = document.getElementById('formFiltros');
+            const selectInstituto = document.getElementById('selectInstituto');
+            const selectMateria = document.getElementById('selectMateria');
+            const selectAnioCarrera = document.getElementById('selectAnioCarrera');
+            const listaAlumnosCard = document.getElementById('listaAlumnosCard');
+            const formAsistenciaCard = document.getElementById('formAsistenciaCard');
+            const porcentajeAsistenciaCard = document.getElementById('porcentajeAsistenciaCard');
+            const tablaAlumnos = document.getElementById('tablaAlumnos');
+            const formAsistencia = document.getElementById('formAsistencia');
+            const porcentajeAsistencia = document.getElementById('porcentajeAsistencia');
+
+            // Ejemplo de datos de alumnos
+            const alumnos = [
+                { id: 1, nombre: 'Juan Pérez' },
+                { id: 2, nombre: 'María Gómez' },
+                { id: 3, nombre: 'Carlos López' },
+            ];
+
+            // Ejemplo de función para cargar opciones de select
+            function cargarOpcionesSelect(select, opciones) {
+                opciones.forEach(opcion => {
+                    const option = document.createElement('option');
+                    option.value = opcion.valor;
+                    option.textContent = opcion.texto;
+                    select.appendChild(option);
+                });
+            }
+
+            // Ejemplo de función para filtrar alumnos y mostrar lista
+            formFiltros.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Simulación de filtrado de alumnos
+                const idInstituto = selectInstituto.value;
+                const idMateria = selectMateria.value;
+                const idAnioCarrera = selectAnioCarrera.value;
+
+                // Filtrar alumnos según los criterios seleccionados
+                const alumnosFiltrados = alumnos.filter(alumno => {
+                    // Lógica de filtro simulada, adaptar según backend real
+                    return alumno.idInstituto === idInstituto &&
+                           alumno.idMateria === idMateria &&
+                           alumno.idAnioCarrera === idAnioCarrera;
+                });
+
+                // Mostrar lista de alumnos filtrados
+                tablaAlumnos.innerHTML = '';
+                alumnosFiltrados.forEach(alumno => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${alumno.id}</td>
+                        <td>${alumno.nombre}</td>
+                        <td>
+                            <button class="btn btn-primary btn-sm" onclick="registrarAsistencia(${alumno.id})">Registrar Asistencia</button>
+                        </td>
+                    `;
+                    tablaAlumnos.appendChild(row);
+                });
+
+                // Mostrar el card de lista de alumnos
+                listaAlumnosCard.style.display = 'block';
+            });
+
+            // Función para registrar asistencia de un alumno seleccionado
+            window.registrarAsistencia = function(idAlumno) {
+                formAsistencia.reset(); // Limpiar formulario
+
+                // Simular obtención de datos del alumno por ID
+                const alumnoSeleccionado = alumnos.find(alumno => alumno.id === idAlumno);
+
+                // Llenar formulario con datos del alumno seleccionado
+                document.getElementById('idAlumnoAsistencia').value = idAlumno; // Guardar ID de alumno
+                document.getElementById('clase').value = ''; // Limpiar campo de clase
+                document.getElementById('fecha').value = ''; // Limpiar campo de fecha
+                document.getElementById('asistenciaSi').checked = false; // Reiniciar radio buttons
+                document.getElementById('asistenciaNo').checked = false;
+
+                // Mostrar el card de formulario de asistencia
+                formAsistenciaCard.style.display = 'block';
+            };
+
+            // Función para guardar asistencia
+            formAsistencia.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Simular obtención de datos del formulario
+                const idAlumno = formAsistencia.idAlumnoAsistencia.value;
+                const clase = formAsistencia.clase.value;
+                const fecha = formAsistencia.fecha.value;
+                const asistencia = document.querySelector('input[name="asistencia"]:checked').value;
+
+                // Simular almacenamiento de asistencia
+                console.log(`Asistencia registrada para alumno ${idAlumno}: Clase ${clase}, Fecha ${fecha}, Asistió: ${asistencia}`);
+
+                // Mostrar el card de porcentaje de asistencia
+                porcentajeAsistencia.textContent = `Porcentaje de Asistencia: ${calcularPorcentajeAsistencia()}%`;
+                porcentajeAsistenciaCard.style.display = 'block';
+
+                // Ocultar el formulario de asistencia
+                formAsistenciaCard.style.display = 'none';
+            });
+
+            // Ejemplo de función para calcular porcentaje de asistencia (simulación)
+            function calcularPorcentajeAsistencia() {
+                // Lógica de cálculo de porcentaje de asistencia
+                return Math.floor(Math.random() * 100); // Simulación de porcentaje aleatorio
+            }
+        });
+    </script>
+</body>
+</html>

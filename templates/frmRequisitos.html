@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Requerimientos</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet">
+    <style>
+        .main-content {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Menú de Navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="index.html">Gestión de Requerimientos</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="frmInstitutos.html"><i class="fas fa-school"></i> Institutos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"><i class="fas fa-chalkboard-teacher"></i> Profesores</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmMaterias.html"><i class="fas fa-book"></i> Materias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAlumnos.html"><i class="fas fa-user-graduate"></i> Alumnos</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmClases.html"><i class="fas fa-calendar-alt"></i> Clases</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmAsistencias.html"><i class="fas fa-check-circle"></i> Asistencias</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="frmRequisitos.html"><i class="fas fa-tasks"></i> Requisitos</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Contenido Principal -->
+    <div class="container main-content">
+        <h1 class="text-center">Gestión de Requerimientos</h1>
+        
+        <!-- Formulario para agregar o editar requerimientos -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <i class="fas fa-tasks"></i> Agregar / Editar Requerimiento
+            </div>
+            <div class="card-body">
+                <form id="formRequerimiento">
+                    <input type="hidden" id="idRequerimiento" name="idRequerimiento">
+                    <div class="form-group">
+                        <label for="materia">Materia:</label>
+                        <select class="form-control" id="materia" name="materia" required>
+                            <!-- Opciones de materias cargadas dinámicamente -->
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="anio">Año:</label>
+                        <select class="form-control" id="anio" name="anio" required>
+                            <option value="1">1°</option>
+                            <option value="2">2°</option>
+                            <option value="3">3°</option>
+                            <option value="4">4°</option>
+                            <option value="5">5°</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipo">Tipo de Requerimiento:</label>
+                        <select class="form-control" id="tipo" name="tipo" required>
+                            <option value="regularidad">Regularidad</option>
+                            <option value="aprobacion">Aprobación</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="porcentajeAsistencia">Porcentaje de Asistencia:</label>
+                        <input type="number" class="form-control" id="porcentajeAsistencia" name="porcentajeAsistencia" min="0" max="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="otroRequerimiento">Otro Requerimiento:</label>
+                        <textarea class="form-control" id="otroRequerimiento" name="otroRequerimiento"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Lista de Requerimientos -->
+        <div class="card">
+            <div class="card-header">
+                <i class="fas fa-list"></i> Lista de Requerimientos
+            </div>
+            <div class="card-body">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Materia</th>
+                            <th>Año</th>
+                            <th>Tipo</th>
+                            <th>Porcentaje de Asistencia</th>
+                            <th>Otro Requerimiento</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tablaRequerimientos">
+                        <!-- Filas de requerimientos generadas dinámicamente -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <!-- Script para manejar el formulario y la tabla -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const formRequerimiento = document.getElementById('formRequerimiento');
+            const tablaRequerimientos = document.getElementById('tablaRequerimientos');
+            let idRequerimiento = 1;
+
+            // Ejemplo de datos de requerimientos
+            const requerimientos = [
+                { id: 1, materia: 'Matemáticas', anio: '1°', tipo: 'Regularidad', porcentajeAsistencia: 75, otroRequerimiento: 'Participación en clase' },
+                { id: 2, materia: 'Física', anio: '2°', tipo: 'Aprobación', porcentajeAsistencia: 80, otroRequerimiento: 'Entrega de trabajos prácticos' },
+            ];
+
+            // Cargar lista inicial de requerimientos
+            cargarRequerimientos();
+
+            // Función para cargar los requerimientos en la tabla
+            function cargarRequerimientos() {
+                tablaRequerimientos.innerHTML = '';
+                requerimientos.forEach(requerimiento => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${requerimiento.id}</td>
+                        <td>${requerimiento.materia}</td>
+                        <td>${requerimiento.anio}</td>
+                        <td>${requerimiento.tipo}</td>
+                        <td>${requerimiento.porcentajeAsistencia}%</td>
+                        <td>${requerimiento.otroRequerimiento}</td>
+                        <td>
+                            <button class="btn btn-warning btn-sm" onclick="editarRequerimiento(${requerimiento.id})"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-danger btn-sm" onclick="eliminarRequerimiento(${requerimiento.id})"><i class="fas fa-trash"></i></button>
+                        </td>
+                    `;
+                    tablaRequerimientos.appendChild(row);
+                });
+            }
+
+            // Función para agregar o editar un requerimiento
+            formRequerimiento.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const materia = formRequerimiento.materia.value;
+                const anio = formRequerimiento.anio.value;
+                const tipo = formRequerimiento.tipo.value;
+                const porcentajeAsistencia = formRequerimiento.porcentajeAsistencia.value;
+                const otroRequerimiento = formRequerimiento.otroRequerimiento.value;
+
+                // Simular creación o edición de requerimiento (añadir lógica real según backend)
+                if (formRequerimiento.idRequerimiento.value) {
+                    // Editar requerimiento existente
+                    const id = parseInt(formRequerimiento.idRequerimiento.value);
+                    const requerimientoIndex = requerimientos.findIndex(requerimiento => requerimiento.id === id);
+                    requerimientos[requerimientoIndex].materia = materia;
+                    requerimientos[requerimientoIndex].anio = anio;
+                    requerimientos[requerimientoIndex].tipo = tipo;
+                    requerimientos[requerimientoIndex].porcentajeAsistencia = porcentajeAsistencia;
+                    requerimientos[requerimientoIndex].otroRequerimiento = otroRequerimiento;
+                } else {
+                    // Agregar nuevo requerimiento
+                    const nuevoRequerimiento = {
+                        id: idRequerimiento++,
+                        materia: materia,
+                        anio: anio,
+                        tipo: tipo,
+                        porcentajeAsistencia: porcentajeAsistencia,
+                        otroRequerimiento: otroRequerimiento
+                    };
+                    requerimientos.push(nuevoRequerimiento);
+                }
+
+                cargarRequerimientos();
+                formRequerimiento.reset();
+                formRequerimiento.idRequerimiento.value = '';
+            });
+
+            // Función para editar un requerimiento
+            window.editarRequerimiento = function(id) {
+                const requerimiento = requerimientos.find(req => req.id === id);
+                formRequerimiento.idRequerimiento.value = requerimiento.id;
+                formRequerimiento.materia.value = requerimiento.materia;
+                formRequerimiento.anio.value = requerimiento.anio;
+                formRequerimiento.tipo.value = requerimiento.tipo;
+                formRequerimiento.porcentajeAsistencia.value = requerimiento.porcentajeAsistencia;
+                formRequerimiento.otroRequerimiento.value = requerimiento.otroRequerimiento;
+            }
+
+            // Función para eliminar un requerimiento
+            window.eliminarRequerimiento = function(id) {
+                const requerimientoIndex = requerimientos.findIndex(requerimiento => requerimiento.id === id);
+                requerimientos.splice(requerimientoIndex, 1);
+                cargarRequerimientos();
+            }
+        });
+    </script>
+</body>
+</html>
